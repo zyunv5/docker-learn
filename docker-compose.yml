@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  db:
+    image: redis:alpine
+    restart_policy: always
+    ports:
+      - 6389:6379
+    networks:
+      - app-test
+
+    node-redis-app:
+     # image: zyun/node-redis-app
+     build: 
+        context: ./node-redis
+        dockerfile: ./node-redis/Dockerfile
+    restart: always
+    depends_on: 
+      - db
+    ports:
+      - 4444:3000
+    networks:
+        - app-test
+
+    react-app-multi:
+      # image: deepred5/react-app-multi
+      build: 
+        context: ./
+        dockerfile: ./Dockerfile.multi
+        restart: always
+        depends_on:
+        - node-redis-app
+      ports:
+        - 9999:80
+      networks:
+        - app-test
+
+      networks:
+        app-test:
+          driver: bridge

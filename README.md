@@ -41,3 +41,11 @@ CMD ["nginx", "-g", "daemon off;"]
 ```
 4. 修改成多层构建
    4.1 新建Dockerfile.multi
+
+
+  
+
+## react-node-redis
+1. 添加node与redis
+2. 用networking进行容器间的通信
+3. 编写docker-compose
