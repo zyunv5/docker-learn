@@ -27,3 +27,5 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # 指定构建镜像时不使用缓存 打包镜像 docker build --no-cache -t zyun/react-app .
 # 启动容器 docker run -d --name my-react-app -p 8888:80 zyun/react-app
+# 访问 http://localhost:8888 即可看到页面
+# 访问 http://localhost:8888/deepred5, 也可以看见页面，说明nginx防刷新配置生效了！
