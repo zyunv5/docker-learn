@@ -1,13 +1,21 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 const Redis = require('ioredis')
+const mongoose = require('mongoose')
 
 const app = new Koa()
 const router = new Router()
 const redis = new Redis({
   host: 'redis',
-  // host: '127.0.0.1',
   port: 6379,
+})
+
+mongoose.connect('mongodb://127.0.0.1:27017/test1', { useNewUrlParser: true }, function (err) {
+  if (err) {
+    console.log('连接失败')
+  } else {
+    console.log('连接成功')
+  }
 })
 
 router.get('/', (ctx, next) => {
