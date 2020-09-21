@@ -32,9 +32,11 @@ services:
     depends_on:
       - redis
       - mongoDB
+      - mysqlDB
     links:
       - redis
       - mongoDB
+      - mysqlDB
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
@@ -64,20 +66,22 @@ services:
     restart: always
     networks:
       - backend
-    environment:
+    # environment:
       # 在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
       # - MONGO_DATA_DIR=/data/db
       # - MONGO_LOG_DIR=/data/logs
       # - MONGO_INITDB_ROOT_USERNAME=admin
       # - MONGO_INITDB_ROOT_PASSWORD=admin
-      - MONGO_INITDB_DATABASE=test
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=123456
-    volumes:
+      ##
+      # - MONGO_INITDB_DATABASE=test
+      # - MONGO_INITDB_ROOT_USERNAME=root
+      # - MONGO_INITDB_ROOT_PASSWORD=123456
+    # volumes:
       # - ./mongodb/mongod.conf:/etc/mongod.conf
-      - ./mongodb/data:/data/db
       # - ./mongodb/log:/data/log
-      - ./mongodb/mongo_users:/docker-entrypoint-initdb.d/
+      ##
+      # - ./mongodb/data:/data/db
+      # - ./mongodb/mongo_users:/docker-entrypoint-initdb.d/
     ports:
       - 27017:27017
     command:
@@ -88,6 +92,22 @@ services:
       #- mongod --auth
       ##
       # - mongod -f /etc/mongod.conf
+
+  mysqlDB:
+    image: mysql:5.7
+    container_name: docker-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: zyun   #创建test用户
+      MYSQL_PASSWORD: zyun  #设置test用户的密码
+      TZ: Asia/Shanghai # 设置时区
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 networks:
   frontend:
