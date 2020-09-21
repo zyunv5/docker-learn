@@ -1,40 +1,97 @@
 version: "3"
-
 services:
-  db:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.multi
+    container_name: docker-react
+    ports:
+      - 9999:80
+    networks:
+      - frontend
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - nodejs
+      - redis
+
+  nodejs:
+    build:
+      context: ./node-redis
+      dockerfile: ./Dockerfile
+    container_name: docker-nodejs
+    ports:
+      - 3014:3014
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - redis
+      - mongoDB
+    links:
+      - redis
+      - mongoDB
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: 123456
+
+  redis:
     image: redis:alpine
-    restart_policy: always
-    ports:
-      - 6389:6379
-    networks:
-      - app-test
-
-    node-redis-app:
-     # image: zyun/node-redis-app
-     build: 
-        context: ./node-redis
-        dockerfile: ./node-redis/Dockerfile
+    container_name: docker-redis
     restart: always
-    depends_on: 
-      - db
     ports:
-      - 4444:3000
+      - 6379:6379
     networks:
-        - app-test
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    privileged: true
+    # volumes:
+    # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # command: redis-server /usr/local/etc/redis/redis.conf
 
-    react-app-multi:
-      # image: deepred5/react-app-multi
-      build: 
-        context: ./
-        dockerfile: ./Dockerfile.multi
-        restart: always
-        depends_on:
-        - node-redis-app
-      ports:
-        - 9999:80
-      networks:
-        - app-test
+  mongoDB:
+    image: mongo:4.2
+    container_name: "docker-mongodb"
+    restart: always
+    networks:
+      - backend
+    environment:
+      # 在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
+      # - MONGO_DATA_DIR=/data/db
+      # - MONGO_LOG_DIR=/data/logs
+      # - MONGO_INITDB_ROOT_USERNAME=admin
+      # - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=test
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    volumes:
+      # - ./mongodb/mongod.conf:/etc/mongod.conf
+      - ./mongodb/data:/data/db
+      # - ./mongodb/log:/data/log
+      - ./mongodb/mongo_users:/docker-entrypoint-initdb.d/
+    ports:
+      - 27017:27017
+    command:
+      mongod
+      ##
+      #- /bin/bash
+      #- -c
+      #- mongod --auth
+      ##
+      # - mongod -f /etc/mongod.conf
 
-      networks:
-        app-test:
-          driver: bridge
+networks:
+  frontend:
+  backend:
+    driver: bridge
+# docker-compose --compatibility up
+# docker-compose up -d --build

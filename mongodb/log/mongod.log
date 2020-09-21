@@ -1,0 +1,79 @@
+2020-09-21T08:56:09.183+0000 I  CONTROL  [main] Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'
+2020-09-21T08:56:09.189+0000 W  ASIO     [main] No TransportLayer configured during NetworkInterface startup
+2020-09-21T08:56:09.191+0000 I  CONTROL  [initandlisten] MongoDB starting : pid=1 port=27017 dbpath=/data/db 64-bit host=358dc9a934c3
+2020-09-21T08:56:09.192+0000 I  CONTROL  [initandlisten] db version v4.2.9
+2020-09-21T08:56:09.192+0000 I  CONTROL  [initandlisten] git version: 06402114114ffc5146fd4b55402c96f1dc9ec4b5
+2020-09-21T08:56:09.192+0000 I  CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.1.1  11 Sep 2018
+2020-09-21T08:56:09.193+0000 I  CONTROL  [initandlisten] allocator: tcmalloc
+2020-09-21T08:56:09.193+0000 I  CONTROL  [initandlisten] modules: none
+2020-09-21T08:56:09.194+0000 I  CONTROL  [initandlisten] build environment:
+2020-09-21T08:56:09.194+0000 I  CONTROL  [initandlisten]     distmod: ubuntu1804
+2020-09-21T08:56:09.194+0000 I  CONTROL  [initandlisten]     distarch: x86_64
+2020-09-21T08:56:09.195+0000 I  CONTROL  [initandlisten]     target_arch: x86_64
+2020-09-21T08:56:09.196+0000 I  CONTROL  [initandlisten] options: { config: "/etc/mongod.conf", net: { bindIp: "0.0.0.0" }, security: { authorization: "enabled" }, storage: { dbPath: "/data/db" }, systemLog: { destination: "file", logAppend: true, path: "/data/log/mongod.log" } }
+2020-09-21T08:56:09.228+0000 I  STORAGE  [initandlisten] Detected data files in /data/db created by the 'wiredTiger' storage engine, so setting the active storage engine to 'wiredTiger'.
+2020-09-21T08:56:09.253+0000 I  STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=483M,cache_overflow=(file_max=0M),session_max=33000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000,close_scan_interval=10,close_handle_minimum=250),statistics_log=(wait=0),verbose=[recovery_progress,checkpoint_progress],
+2020-09-21T08:56:21.647+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678581:647698][1:0x7f082935bb00], txn-recover: Recovering log 15 through 16
+2020-09-21T08:56:22.480+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678582:480725][1:0x7f082935bb00], txn-recover: Recovering log 16 through 16
+2020-09-21T08:56:23.640+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678583:640689][1:0x7f082935bb00], txn-recover: Main recovery loop: starting at 15/6400 to 16/256
+2020-09-21T08:56:24.841+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678584:841024][1:0x7f082935bb00], txn-recover: Recovering log 15 through 16
+2020-09-21T08:56:25.510+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678585:510345][1:0x7f082935bb00], txn-recover: Recovering log 16 through 16
+2020-09-21T08:56:25.557+0000 I  STORAGE  [initandlisten] WiredTiger message [1600678585:557345][1:0x7f082935bb00], txn-recover: Set global recovery timestamp: (0, 0)
+2020-09-21T08:56:25.597+0000 I  RECOVERY [initandlisten] WiredTiger recoveryTimestamp. Ts: Timestamp(0, 0)
+2020-09-21T08:56:25.620+0000 I  STORAGE  [initandlisten] Timestamp monitor starting
+2020-09-21T08:56:25.624+0000 I  CONTROL  [initandlisten] ** WARNING: You are running this process as the root user, which is not recommended.
+2020-09-21T08:56:25.624+0000 I  CONTROL  [initandlisten] 
+2020-09-21T08:56:25.642+0000 I  SHARDING [initandlisten] Marking collection local.system.replset as collection version: <unsharded>
+2020-09-21T08:56:25.657+0000 I  STORAGE  [initandlisten] Flow Control is enabled on this deployment.
+2020-09-21T08:56:25.657+0000 I  SHARDING [initandlisten] Marking collection admin.system.roles as collection version: <unsharded>
+2020-09-21T08:56:25.658+0000 I  SHARDING [initandlisten] Marking collection admin.system.version as collection version: <unsharded>
+2020-09-21T08:56:25.684+0000 I  SHARDING [initandlisten] Marking collection local.startup_log as collection version: <unsharded>
+2020-09-21T08:56:25.690+0000 I  FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+2020-09-21T08:56:25.697+0000 I  SHARDING [LogicalSessionCacheRefresh] Marking collection config.system.sessions as collection version: <unsharded>
+2020-09-21T08:56:25.698+0000 I  SHARDING [LogicalSessionCacheReap] Marking collection config.transactions as collection version: <unsharded>
+2020-09-21T08:56:25.698+0000 I  NETWORK  [listener] Listening on /tmp/mongodb-27017.sock
+2020-09-21T08:56:25.704+0000 I  NETWORK  [listener] Listening on 0.0.0.0
+2020-09-21T08:56:25.705+0000 I  NETWORK  [listener] waiting for connections on port 27017
+2020-09-21T08:56:26.035+0000 I  SHARDING [ftdc] Marking collection local.oplog.rs as collection version: <unsharded>
+2020-09-21T08:56:47.935+0000 I  NETWORK  [listener] connection accepted from 127.0.0.1:44892 #1 (1 connection now open)
+2020-09-21T08:56:47.939+0000 I  SHARDING [conn1] Marking collection admin.system.users as collection version: <unsharded>
+2020-09-21T08:56:47.955+0000 I  NETWORK  [conn1] received client metadata from 127.0.0.1:44892 conn1: { application: { name: "MongoDB Shell" }, driver: { name: "MongoDB Internal Client", version: "4.2.9" }, os: { type: "Linux", name: "Ubuntu", architecture: "x86_64", version: "18.04" } }
+2020-09-21T08:58:04.068+0000 I  NETWORK  [conn1] end connection 127.0.0.1:44892 (0 connections now open)
+2020-09-21T08:58:20.233+0000 I  CONTROL  [signalProcessingThread] got signal 15 (Terminated), will terminate after current cmd ends
+2020-09-21T08:58:20.247+0000 I  REPL     [signalProcessingThread] Stepping down the ReplicationCoordinator for shutdown, waitTime: 10000ms
+2020-09-21T08:58:20.248+0000 I  SHARDING [signalProcessingThread] Shutting down the WaitForMajorityService
+2020-09-21T08:58:20.250+0000 I  CONTROL  [signalProcessingThread] Shutting down the LogicalSessionCache
+2020-09-21T08:58:20.253+0000 I  NETWORK  [signalProcessingThread] shutdown: going to close listening sockets...
+2020-09-21T08:58:20.254+0000 I  NETWORK  [listener] removing socket file: /tmp/mongodb-27017.sock
+2020-09-21T08:58:20.254+0000 I  NETWORK  [signalProcessingThread] Shutting down the global connection pool
+2020-09-21T08:58:20.256+0000 I  STORAGE  [signalProcessingThread] Shutting down the FlowControlTicketholder
+2020-09-21T08:58:20.257+0000 I  -        [signalProcessingThread] Stopping further Flow Control ticket acquisitions.
+2020-09-21T08:58:20.258+0000 I  STORAGE  [signalProcessingThread] Shutting down the PeriodicThreadToAbortExpiredTransactions
+2020-09-21T08:58:20.260+0000 I  STORAGE  [signalProcessingThread] Shutting down the PeriodicThreadToDecreaseSnapshotHistoryIfNotNeeded
+2020-09-21T08:58:20.261+0000 I  REPL     [signalProcessingThread] Shutting down the ReplicationCoordinator
+2020-09-21T08:58:20.263+0000 I  SHARDING [signalProcessingThread] Shutting down the ShardingInitializationMongoD
+2020-09-21T08:58:20.264+0000 I  REPL     [signalProcessingThread] Enqueuing the ReplicationStateTransitionLock for shutdown
+2020-09-21T08:58:20.265+0000 I  -        [signalProcessingThread] Killing all operations for shutdown
+2020-09-21T08:58:20.267+0000 I  COMMAND  [signalProcessingThread] Shutting down all open transactions
+2020-09-21T08:58:20.267+0000 I  REPL     [signalProcessingThread] Acquiring the ReplicationStateTransitionLock for shutdown
+2020-09-21T08:58:20.268+0000 I  INDEX    [signalProcessingThread] Shutting down the IndexBuildsCoordinator
+2020-09-21T08:58:20.269+0000 I  NETWORK  [signalProcessingThread] Shutting down the ReplicaSetMonitor
+2020-09-21T08:58:20.270+0000 I  CONTROL  [signalProcessingThread] Shutting down free monitoring
+2020-09-21T08:58:20.270+0000 I  CONTROL  [signalProcessingThread] Shutting down free monitoring
+2020-09-21T08:58:20.271+0000 I  FTDC     [signalProcessingThread] Shutting down full-time data capture
+2020-09-21T08:58:20.272+0000 I  FTDC     [signalProcessingThread] Shutting down full-time diagnostic data capture
+2020-09-21T08:58:20.280+0000 I  STORAGE  [signalProcessingThread] Shutting down the HealthLog
+2020-09-21T08:58:20.281+0000 I  STORAGE  [signalProcessingThread] Shutting down the storage engine
+2020-09-21T08:58:20.283+0000 I  STORAGE  [signalProcessingThread] Deregistering all the collections
+2020-09-21T08:58:20.283+0000 I  STORAGE  [signalProcessingThread] Timestamp monitor shutting down
+2020-09-21T08:58:20.284+0000 I  STORAGE  [signalProcessingThread] WiredTigerKVEngine shutting down
+2020-09-21T08:58:20.284+0000 I  STORAGE  [signalProcessingThread] Shutting down session sweeper thread
+2020-09-21T08:58:20.285+0000 I  STORAGE  [signalProcessingThread] Finished shutting down session sweeper thread
+2020-09-21T08:58:20.285+0000 I  STORAGE  [signalProcessingThread] Shutting down journal flusher thread
+2020-09-21T08:58:20.312+0000 I  STORAGE  [signalProcessingThread] Finished shutting down journal flusher thread
+2020-09-21T08:58:20.313+0000 I  STORAGE  [signalProcessingThread] Shutting down checkpoint thread
+2020-09-21T08:58:20.313+0000 I  STORAGE  [signalProcessingThread] Finished shutting down checkpoint thread
+2020-09-21T08:58:20.506+0000 I  STORAGE  [signalProcessingThread] shutdown: removing fs lock...
+2020-09-21T08:58:20.508+0000 I  -        [signalProcessingThread] Dropping the scope cache for shutdown
+2020-09-21T08:58:20.509+0000 I  CONTROL  [signalProcessingThread] now exiting
+2020-09-21T08:58:20.511+0000 I  CONTROL  [signalProcessingThread] shutting down with code:0

@@ -43,9 +43,13 @@ CMD ["nginx", "-g", "daemon off;"]
    4.1 新建Dockerfile.multi
 
 
-  
-
 ## react-node-redis
 1. 添加node与redis
 2. 用networking进行容器间的通信
 3. 编写docker-compose
+
+
+## 连接mongoDb的问题
+创建不了用户，需要验证，先修改一波配置文件，取消认证
+创建管理员与普通用户，保存，删除容器
+退出，在打开认证 -----更换版本 3.6.20
