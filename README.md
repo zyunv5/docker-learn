@@ -208,3 +208,33 @@ networks:
 
 ### 这个分支试一下 Travis 自动部署
 1. 新建 .travis.yml
+
+### 看到两套部署方案
+
+#### 方案 1
+
+登录 https://www.travis-ci.org/ 授权
+返回登录
+给要自动化的项目 设置 setting
+确认 Auto cancel branch builds
+确认 Auto cancel pull request builds
+在 Environment Variables 下填写
+https://segmentfault.com/a/1190000016603414?utm_source=tag-newest
+找不到了
+
+#### 方案 2
+
+https://zhuanlan.zhihu.com/p/25066056
+
+1. 在开发服务器（或本地）生成密匙并与部署服务器互信
+   ssh-keygen -t
+   接下来你需要将你开发环境生成的密匙拷贝到你的部署服务器上
+2. 命令登录 linxu
+   ```
+   ssh-copy-id <登录部署服务器用户名>@<部署服务器地址>
+    # 如果ssh默认端口不是22
+    ssh-copy-id <登录部署服务器用户名>@<部署服务器地址> -p <部署服务器ssh端口>
+      # 示例
+      ssh-copy-id travis@123.123.123.123 -p 12345
+   ```
+3. 安装Ruby 2.0以上版本并安装travis的命令行工具
