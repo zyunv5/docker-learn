@@ -60,26 +60,26 @@ CMD ["nginx", "-g", "daemon off;"]
 上面都是纸老虎
 
 ```js
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 mongoose
-  .connect('mongodb://mongoDB:27017/admin-react', {
+  .connect("mongodb://mongoDB:27017/admin-react", {
     //注意url地址最后面的地址是数据库的名称
     //mongoDB 这里就是指代的host 使用的是docker-compose的mongoDB
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log('MongoDb')
+    console.log("MongoDb");
   })
   .catch((err) => {
-    console.log(err)
-  })
+    console.log(err);
+  });
 ```
 
 ```yml
 # 完整记录一次react-node-redis-mongodb 可优化
 
-version: '3'
+version: "3"
 services:
   web:
     build:
@@ -143,7 +143,7 @@ services:
 
   mongoDB:
     image: mongo:4.2
-    container_name: 'docker-mongodb'
+    container_name: "docker-mongodb"
     restart: always
     networks:
       - backend
@@ -176,10 +176,10 @@ services:
 
   mysqlDB:
     image: mysql:5.7
-    container_name: 'docker-mysql'
+    container_name: "docker-mysql"
     restart: always
     ports:
-      - '3306:3306'
+      - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_USER: zyun #创建test用户
@@ -199,7 +199,12 @@ networks:
 
 ## mysql
 
+## nodemon 分支
 
-## nodemon分支
-我并没有使用nodemon
-最后用的pm2
+我并没有使用 nodemon
+最后用的 pm2
+
+## deploy
+
+### 这个分支试一下 Travis 自动部署
+1. 新建 .travis.yml
