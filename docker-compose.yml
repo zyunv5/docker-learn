@@ -15,7 +15,7 @@ services:
         condition: on-failure
     depends_on:
       - nodejs
-      - redis
+      - mysqlDB
 
   nodejs:
     build:
@@ -30,12 +30,8 @@ services:
       restart_policy:
         condition: on-failure
     depends_on:
-      - redis
-      - mongoDB
       - mysqlDB
     links:
-      - redis
-      - mongoDB
       - mysqlDB
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
@@ -43,75 +39,38 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
       ME_CONFIG_BASICAUTH_USERNAME: root
       ME_CONFIG_BASICAUTH_PASSWORD: 123456
+      DATABASE_HOST: mysqlDB
 
-  redis:
-    image: redis:alpine
-    container_name: docker-redis
-    restart: always
-    ports:
-      - 6379:6379
-    networks:
-      - backend
+  mysqlDB:
+    image: mysql:5.7.31
+    container_name: docker-mysql
     deploy:
       restart_policy:
         condition: on-failure
-    privileged: true
-    # volumes:
-    # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    # command: redis-server /usr/local/etc/redis/redis.conf
-
-  mongoDB:
-    image: mongo:4.2
-    container_name: "docker-mongodb"
-    restart: always
-    networks:
-      - backend
-    # environment:
-      # 在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
-      # - MONGO_DATA_DIR=/data/db
-      # - MONGO_LOG_DIR=/data/logs
-      # - MONGO_INITDB_ROOT_USERNAME=admin
-      # - MONGO_INITDB_ROOT_PASSWORD=admin
-      ##
-      # - MONGO_INITDB_DATABASE=test
-      # - MONGO_INITDB_ROOT_USERNAME=root
-      # - MONGO_INITDB_ROOT_PASSWORD=123456
-    # volumes:
-      # - ./mongodb/mongod.conf:/etc/mongod.conf
-      # - ./mongodb/log:/data/log
-      ##
-      # - ./mongodb/data:/data/db
-      # - ./mongodb/mongo_users:/docker-entrypoint-initdb.d/
-    ports:
-      - 27017:27017
-    command:
-      mongod
-      ##
-      #- /bin/bash
-      #- -c
-      #- mongod --auth
-      ##
-      # - mongod -f /etc/mongod.conf
-
-  mysqlDB:
-    image: mysql:5.7
-    container_name: docker-mysql
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: "test"
-      MYSQL_USER: zyun   #创建test用户
-      MYSQL_PASSWORD: zyun  #设置test用户的密码
+      MYSQL_USER: root #创建test用户
+      MYSQL_PASSWORD: 123456 #设置test用户的密码
       TZ: Asia/Shanghai # 设置时区
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - backend
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
+    volumes:
+      # - ./mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - "./mysql/data:/var/lib/mysql"
+      - ./mysql/init:/docker-entrypoint-initdb.d/
 
 networks:
   frontend:
   backend:
     driver: bridge
-# docker-compose --compatibility up
+# docker-compose down
 # docker-compose up -d --build
+# docker-compose --compatibility up -d

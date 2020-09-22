@@ -14,5 +14,9 @@
     "koa": "^2.13.0",
     "koa-router": "^9.4.0",
     "mongoose": "^5.10.6"
+  },
+  "devDependencies": {
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.3.5"
   }
 }

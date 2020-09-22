@@ -1,0 +1,100 @@
+version: "3"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.multi
+    container_name: docker-react
+    ports:
+      - 9999:80
+    networks:
+      - frontend
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - nodejs
+      - redis
+
+  nodejs:
+    build:
+      context: ./node-redis
+      dockerfile: ./Dockerfile
+    container_name: docker-nodejs
+    ports:
+      - 3014:3014
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - redis
+      - mongoDB
+      - mysqlDB
+    links:
+      - redis
+      - mongoDB
+      - mysqlDB
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: 123456
+
+  mongoDB:
+    image: mongo:4.2
+    container_name: "docker-mongodb"
+    restart: always
+    networks:
+      - backend
+    # environment:
+    # 在这里输入 MongoDB 的 root 用户与密码，如果使用了此项，则不需要 --auth 参数
+    # - MONGO_DATA_DIR=/data/db
+    # - MONGO_LOG_DIR=/data/logs
+    # - MONGO_INITDB_ROOT_USERNAME=admin
+    # - MONGO_INITDB_ROOT_PASSWORD=admin
+    ##
+    # - MONGO_INITDB_DATABASE=test
+    # - MONGO_INITDB_ROOT_USERNAME=root
+    # - MONGO_INITDB_ROOT_PASSWORD=123456
+    # volumes:
+    # - ./mongodb/mongod.conf:/etc/mongod.conf
+    # - ./mongodb/log:/data/log
+    ##
+    # - ./mongodb/data:/data/db
+    # - ./mongodb/mongo_users:/docker-entrypoint-initdb.d/
+    ports:
+      - 27017:27017
+    command:
+      mongod
+      ##
+      #- /bin/bash
+      #- -c
+      #- mongod --auth
+      ##
+      # - mongod -f /etc/mongod.conf
+
+
+networks:
+  frontend:
+  backend:
+    driver: bridge
+# docker-compose --compatibility up
+# docker-compose up -d --build
+
+
+#mongoose
+#  .connect("mongodb://mongoDB:27017/admin-react", {
+#    //注意url地址最后面的地址是数据库的名称
+#     useNewUrlParser: true,
+#     useUnifiedTopology: true,
+#   })
+#   .then(() => {
+#     console.log("MongoDb");
+#   })
+#   .catch((err) => {
+#     console.log(err);
+#   });
