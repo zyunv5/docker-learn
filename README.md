@@ -198,3 +198,8 @@ networks:
 ```
 
 ## mysql
+
+
+## nodemon分支
+我并没有使用nodemon
+最后用的pm2
