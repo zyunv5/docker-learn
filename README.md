@@ -1,3 +1,5 @@
+[toc]
+
 ## master 只有 README.md
 
 ## react 分支
@@ -7,6 +9,10 @@
 3. 第一次成功启动 docker 解决了两个 bug
    3.1 一个是 npm run build 时失败，修改了 COPY react-app /app 以前是 COPY . /app 应该是没有找到文件夹
    3.2 nginx: [emerg] open() "/run/nginx/nginx.pid" failed (2: No such file or directory) nginx 启动报错 添加了这么一行 RUN mkdir -p /run/nginx
+4. 修改成多层构建
+   4.1 新建 Dockerfile.multi
+
+/Dockerfile
 
 ```yml
 #基础镜像，这里选择的这个node 是因为build之后占用空间没有那么大 原本的FROM node:11 镜像过大
@@ -42,8 +48,39 @@ CMD ["nginx", "-g", "daemon off;"]
 # 访问 http://localhost:8888/deepred5, 也可以看见页面，说明nginx防刷新配置生效了！
 ```
 
-4. 修改成多层构建
-   4.1 新建 Dockerfile.multi
+/Dockerfile.multi
+
+```yml
+# node镜像仅仅是用来打包文件
+FROM node:alpine as builder
+
+ENV PROJECT_ENV production
+ENV NODE_ENV production
+
+COPY ./react-app/package*.json /app/
+
+WORKDIR /app
+
+RUN npm install --registry=https://registry.npm.taobao.org
+
+COPY react-app /app
+
+RUN npm run build
+
+# 选择更小体积的基础镜像
+FROM nginx:alpine
+
+COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=builder /app/build /app/build
+
+# 打包镜像
+# -f 指定使用Dockerfile.multi进行构建
+# docker build -t zyun/react-app-multi .  -f Dockerfile.multi
+# 启动容器
+# docker run -d --name my-react-app-multi -p 8889:80 zyun/react-app-multi
+# http://localhost:8889/ 查看页面
+```
 
 ## react-node-redis
 
@@ -51,34 +88,11 @@ CMD ["nginx", "-g", "daemon off;"]
 2. 用 networking 进行容器间的通信
 3. 编写 docker-compose
 
-## 连接 mongoDb 的问题
+这里注意 redis 的 host，就是 docker-compose 配置文件的命名
 
-创建不了用户，需要验证，先修改一波配置文件，取消认证
-创建管理员与普通用户，保存，删除容器
-退出，在打开认证
-————————————————————————
-上面都是纸老虎
-
-```js
-const mongoose = require("mongoose");
-mongoose
-  .connect("mongodb://mongoDB:27017/admin-react", {
-    //注意url地址最后面的地址是数据库的名称
-    //mongoDB 这里就是指代的host 使用的是docker-compose的mongoDB
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("MongoDb");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-```
+/docker-compose.yml
 
 ```yml
-# 完整记录一次react-node-redis-mongodb 可优化
-
 version: "3"
 services:
   web:
@@ -141,6 +155,71 @@ services:
     # - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     # command: redis-server /usr/local/etc/redis/redis.conf
 
+networks:
+  frontend:
+  backend:
+    driver: bridge
+# docker-compose --compatibility up
+# docker-compose up -d --build
+
+# const redis = new Redis({
+#   host: "redis",
+#   port: 6379,
+# });
+```
+
+## 连接 mongoDb 的问题
+
+一开始不知道怎么配置的，容器启动了，想看看数据库，但是用 Navicat Premium 连接，一直要求我认证
+后来鼓捣了很久 最后研究出来一版
+
+```yml
+version: "3"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.multi
+    container_name: docker-react
+    ports:
+      - 9999:80
+    networks:
+      - frontend
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - nodejs
+      - redis
+
+  nodejs:
+    build:
+      context: ./node-redis
+      dockerfile: ./Dockerfile
+    container_name: docker-nodejs
+    ports:
+      - 3014:3014
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - redis
+      - mongoDB
+      - mysqlDB
+    links:
+      - redis
+      - mongoDB
+      - mysqlDB
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: 123456
+
   mongoDB:
     image: mongo:4.2
     container_name: "docker-mongodb"
@@ -174,67 +253,189 @@ services:
       ##
       # - mongod -f /etc/mongod.conf
 
-  mysqlDB:
-    image: mysql:5.7
-    container_name: "docker-mysql"
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_USER: zyun #创建test用户
-      MYSQL_PASSWORD: zyun #设置test用户的密码
-      TZ: Asia/Shanghai # 设置时区
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    networks:
-      - backend
-
 networks:
   frontend:
   backend:
     driver: bridge
 # docker-compose --compatibility up
 # docker-compose up -d --build
+
+#mongoose
+#  .connect("mongodb://mongoDB:27017/admin-react", {
+#    //注意url地址最后面的地址是数据库的名称
+#     useNewUrlParser: true,
+#     useUnifiedTopology: true,
+#   })
+#   .then(() => {
+#     console.log("MongoDb");
+#   })
+#   .catch((err) => {
+#     console.log(err);
+#   });
 ```
 
 ## mysql
 
+连接 mysql 也是一波三折 频繁遇到 账号与密码不对的问题
+
+```yml
+version: "3"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.multi
+    container_name: docker-react
+    ports:
+      - 9999:80
+    networks:
+      - frontend
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - nodejs
+      - mysqlDB
+
+  nodejs:
+    build:
+      context: ./node-redis
+      dockerfile: ./Dockerfile
+    container_name: docker-nodejs
+    ports:
+      - 3014:3014
+    networks:
+      - backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+    depends_on:
+      - mysqlDB
+    links:
+      - mysqlDB
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: 123456
+      DATABASE_HOST: mysqlDB
+
+  mysqlDB:
+    image: mysql:5.7.31
+    container_name: docker-mysql
+    deploy:
+      restart_policy:
+        condition: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: "test"
+      MYSQL_USER: root #创建test用户
+      MYSQL_PASSWORD: 123456 #设置test用户的密码
+      TZ: Asia/Shanghai # 设置时区
+    ports:
+      - "3307:3306"
+    networks:
+      - backend
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
+    volumes:
+      # - ./mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - "./mysql/data:/var/lib/mysql"
+      - ./mysql/init:/docker-entrypoint-initdb.d/
+
+networks:
+  frontend:
+  backend:
+    driver: bridge
+# docker-compose down
+# docker-compose up -d --build
+# docker-compose --compatibility up -d
+
+node/index.js
+# const { Sequelize } = require("sequelize");
+# const mysqlConfig = require("./configs/mysql-config");
+
+# const app = new Koa();
+# const router = new Router();
+
+# const sequelize = new Sequelize(
+#   mysqlConfig.dbname,
+#   mysqlConfig.uname,
+#   mysqlConfig.upwd,
+#   {
+#     host: mysqlConfig.host,
+#     dialect: mysqlConfig.dialect,
+#     pool: mysqlConfig.pool,
+#   }
+# );
+
+# async function fn() {
+#   try {
+#     await sequelize.authenticate();
+#     console.log("Connection has been established successfully.");
+#   } catch (error) {
+#     console.error("Unable to connect to the database:", error);
+#   }
+# }
+# fn();
+
+node/config
+# const config = {
+#   dbname: 'test',
+#   uname: 'root',
+#   upwd: '123456',
+#   host:  process.env.DATABASE_HOST || '127.0.0.1',
+#   port: 3306,
+#   dialect: 'mysql',
+#   pool: {
+#       max: 5,
+#       min: 0,
+#       idle: 10000
+#   }
+# };
+
+# module.exports = config;
+```
+
 ## nodemon 分支
 
-我并没有使用 nodemon
-最后用的 pm2
+一开始打算用 nodemon，但是 nodemon 本地调试就够了
+远程的话可以直接上 pm2
 
 ## deploy
 
-### 这个分支试一下 Travis 自动部署
-1. 新建 .travis.yml
+### 这个分支试一下 Travis docker-compose 自动部署
+前置条件 需要ruby条件
+先试试方法1
+[centos7/rhel7安装较高版本ruby2.2/2.3/2.4+](https://www.cnblogs.com/ding2016/p/7903147.html)
+rvm use 2.6.5 --default
 
-### 看到两套部署方案
 
-#### 方案 1
+[一点都不高大上，手把手教你使用 Travis CI 实现持续部署](https://zhuanlan.zhihu.com/p/25066056) 跳过
+[利用 travis-ci 持续部署 nodejs 应用](https://cnodejs.org/topic/5885f19c171f3bc843f6017e) 跳过
 
-登录 https://www.travis-ci.org/ 授权
-返回登录
-给要自动化的项目 设置 setting
-确认 Auto cancel branch builds
-确认 Auto cancel pull request builds
-在 Environment Variables 下填写
-https://segmentfault.com/a/1190000016603414?utm_source=tag-newest
-找不到了
+[使用 GitHub+Travis-CI+Docker 打造自动化流水线](https://blog.csdn.net/qq_24464827/article/details/104471319) 80%
 
-#### 方案 2
+[持续部署——Travis+Docker+阿里云容器镜像](https://blog.csdn.net/fly7632785/article/details/107409126) 
 
-https://zhuanlan.zhihu.com/p/25066056
+## 小插曲
 
-1. 在开发服务器（或本地）生成密匙并与部署服务器互信
-   ssh-keygen -t
-   接下来你需要将你开发环境生成的密匙拷贝到你的部署服务器上
-2. 命令登录 linxu
-   ```
-   ssh-copy-id <登录部署服务器用户名>@<部署服务器地址>
-    # 如果ssh默认端口不是22
-    ssh-copy-id <登录部署服务器用户名>@<部署服务器地址> -p <部署服务器ssh端口>
-      # 示例
-      ssh-copy-id travis@123.123.123.123 -p 12345
-   ```
-3. 安装Ruby 2.0以上版本并安装travis的命令行工具
+- 关于代码放在哪个服务器的哪个文件夹下：
+  [在服务器上你们自己服务的代码一般放在什么目录下?](https://www.v2ex.com/t/644152)
+
+```
+团队里都是 root 下的 根目录 /data ...
+理论上编译好的应该是在 /usr/local/bin 或软连接 /var/opt/xxx/bin
+代码是在 /var/opt/xxx
+配置是在 /etc/xxx/xxx.config
+Log 放 /var/opt/xxx/log
+如果特定挂载盘放 /mnt/volume 挂载???
+基本上是扒 Gitlab 的路径.
+```
+
+- centOS6 的一些环境变量我真是受够了，直接换了 centOS7
