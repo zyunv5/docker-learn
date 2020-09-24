@@ -426,8 +426,16 @@ rvm use 2.6.5 --default
 bug:
 iv undefined
 The command "openssl aes-256-cbc -K $encrypted_1dc0466c3d69_key -iv $encrypted_1dc0466c3d69_iv -in nopwd.enc -out ~/.ssh/nopwd -d" failed and exited with 1 during .
-
-
+一直解决不了，最后。。。
+我看的教程和我网站的都不一样，最后发现org与com
+不是合并了吗？ 不是同一个吗？不是只能用com吗？
+https://travis-ci.com/ 上一直构建失败
+直到我访问了
+https://travis-ci.org/account/repositories
+travis login --com 
+travis login --org
+travis login --auto
+travis login --pro
 
 ## 小插曲
 
@@ -444,4 +452,4 @@ Log 放 /var/opt/xxx/log
 基本上是扒 Gitlab 的路径.
 ```
 
-- centOS6 的一些环境变量我真是受够了，直接换了 centOS7
+- centOS6 的一些环境变量我真是受够了，直接换了 centOS7 
