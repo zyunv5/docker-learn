@@ -445,6 +445,13 @@ https://travis-ci.com/ 的环境配置
 Environment Variables
 直接添加就好
 
+docker push
+requested access to the resource is denied
+
+1. 先登录dockerHub 创建一个 查看地址 docker push username/docker-learn:tagname
+2. 把本地刚才的镜像改名字  docker tag docker-learn:latest  username/docker-learn:lastest
+3. 这时再push docker push username/docker-learn:lastest   
+
 ## 小插曲
 
 - 关于代码放在哪个服务器的哪个文件夹下：
