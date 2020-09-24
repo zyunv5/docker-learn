@@ -1,4 +1,4 @@
-[toc]
+[![Build Status](https://travis-ci.com/zyunv5/docker-learn.svg?branch=project-deploy)](https://travis-ci.com/zyunv5/docker-learn)
 
 ## master 只有 README.md
 
@@ -432,10 +432,18 @@ The command "openssl aes-256-cbc -K $encrypted_1dc0466c3d69_key -iv $encrypted_1
 https://travis-ci.com/ 上一直构建失败
 直到我访问了
 https://travis-ci.org/account/repositories
+
+这些命令又是什么？
 travis login --com 
 travis login --org
 travis login --auto
 travis login --pro
+
+最后知道真相的我，眼裂掉下来
+https://travis-ci.com/ 的环境配置
+
+Environment Variables
+直接添加就好
 
 ## 小插曲
 
