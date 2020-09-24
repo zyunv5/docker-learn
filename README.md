@@ -423,6 +423,12 @@ rvm use 2.6.5 --default
 
 [持续部署——Travis+Docker+阿里云容器镜像](https://blog.csdn.net/fly7632785/article/details/107409126) 
 
+bug:
+iv undefined
+The command "openssl aes-256-cbc -K $encrypted_1dc0466c3d69_key -iv $encrypted_1dc0466c3d69_iv -in nopwd.enc -out ~/.ssh/nopwd -d" failed and exited with 1 during .
+
+
+
 ## 小插曲
 
 - 关于代码放在哪个服务器的哪个文件夹下：
