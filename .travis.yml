@@ -5,7 +5,7 @@ sudo: required
 before_install:
   - export TZ='Asia/Shanghai'
 script:
-  - docker build -t "zyunv513/docker-learn:latest"
+  - docker build . -t "zyunv513/docker-learn:latest"
 after_success:
   - echo $docker_pwd | docker login -u "zyunv513" --password-stdin
   - docker push zyunv513/docker-learn:latest
