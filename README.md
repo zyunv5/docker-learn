@@ -421,7 +421,7 @@ rvm use 2.6.5 --default
 
 [使用 GitHub+Travis-CI+Docker 打造自动化流水线](https://blog.csdn.net/qq_24464827/article/details/104471319) 80%
 
-[持续部署——Travis+Docker+阿里云容器镜像](https://blog.csdn.net/fly7632785/article/details/107409126) 
+[持续部署——Travis+Docker+阿里云容器镜像](https://blog.csdn.net/fly7632785/article/details/107409126)
 
 bug:
 iv undefined
@@ -434,7 +434,7 @@ https://travis-ci.com/ 上一直构建失败
 https://travis-ci.org/account/repositories
 
 这些命令又是什么？
-travis login --com 
+travis login --com
 travis login --org
 travis login --auto
 travis login --pro
@@ -450,7 +450,12 @@ requested access to the resource is denied
 
 1. 先登录dockerHub 创建一个 查看地址 docker push username/docker-learn:tagname
 2. 把本地刚才的镜像改名字  docker tag docker-learn:latest  username/docker-learn:lastest
-3. 这时再push docker push username/docker-learn:lastest   
+3. 这时再push docker push username/docker-learn:lastest
+
+最终这个分支卡在了部署环节，镜像已经打好了，已经push过去了，但是远程服务器连接不上
+我新建了本地的rsa，但是在travis.com上没有同步环境变量，在org上同步了
+两个网站同时构建，但是报不一样的错误
+换下一个平台吧 travis mmp
 
 ## 小插曲
 
@@ -467,7 +472,7 @@ Log 放 /var/opt/xxx/log
 基本上是扒 Gitlab 的路径.
 ```
 
-- centOS6 的一些环境变量我真是受够了，直接换了 centOS7 
+- centOS6 的一些环境变量我真是受够了，直接换了 centOS7
 
 [同一个ssh key用在多台电脑上](https://blog.csdn.net/qq_36528804/article/details/96693330)
 [多台Mac电脑共用SSH Public/Private Key](https://blog.csdn.net/qq_33632048/article/details/80181210?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.add_param_isCf&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.add_param_isCf)
