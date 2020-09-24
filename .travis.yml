@@ -7,7 +7,7 @@ before_install:
 script:
   - docker build . -t "docker-learn:latest"
 after_success:
-  - docker login --username=zyunv513 -p=$docker_pwd dockerhub
+  - echo "docker_pwd" | docker login -u "zyunv513" --password-stdin
   - docker push dockerhub:latest
   - chmod 600 id_rsa
   - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$server_ip "cd /opt/project;sudo docker-compose -f docker-compose.yml pull;sudo docker-compose -f docker-compose.yml up -d;exit"
