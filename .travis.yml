@@ -1,12 +1,22 @@
-language: node_js
-node_js: stable
-cache:
-  directories:
-    - node_modules # 依赖缓存的目录
+language: bash
+services:
+  - docker
+sudo: required
+branches:
+  only:
+    - project-deploy
 before_install:
-  - export TZ='Asia/Shanghai' # 设置时区
+  - export TZ='Asia/Shanghai'
+script:
+  - docker build . -t "docker-learn:latest"
+after_success:
+  - docker login --username=zyunv513 -p=$docker_pwd dockerhub
+  - docker push dockerhub:latest
+  - chmod 600 id_rsa
+  - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$server_ip "cd /opt/project;sudo docker-compose -f docker-compose.yml pull;sudo docker-compose -f docker-compose.yml up -d;exit"
+
 deploy:
   provider: pages
-  github-token: $GH_TOKEN # github 上的token环境变量
+  github-token: $GH_TOKEN
   on:
     branch: project-deploy
