@@ -456,6 +456,8 @@ requested access to the resource is denied
 我新建了本地的rsa，但是在travis.com上没有同步环境变量，在org上同步了
 两个网站同时构建，但是报不一样的错误
 换下一个平台吧 travis mmp
+https://travis-ci.com/github/zyunv5/docker-learn/jobs/390440022
+https://travis-ci.org/github/zyunv5/docker-learn
 
 ## 小插曲
 
