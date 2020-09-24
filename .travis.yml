@@ -11,8 +11,3 @@ after_success:
   - docker push dockerhub:latest
   - chmod 600 id_rsa
   - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$server_ip "cd /opt/project;sudo docker-compose -f docker-compose.yml pull;sudo docker-compose -f docker-compose.yml up -d;exit"
-deploy:
-  provider: pages
-  github-token: $GH_TOKEN
-  on:
-    branch: project-deploy

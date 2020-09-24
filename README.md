@@ -461,3 +461,7 @@ Log 放 /var/opt/xxx/log
 ```
 
 - centOS6 的一些环境变量我真是受够了，直接换了 centOS7 
+
+[同一个ssh key用在多台电脑上](https://blog.csdn.net/qq_36528804/article/details/96693330)
+[多台Mac电脑共用SSH Public/Private Key](https://blog.csdn.net/qq_33632048/article/details/80181210?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.add_param_isCf&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-2.add_param_isCf)
+[SSH多个机器使用同一套公私钥及同一机器多套公私钥和端口转发](https://news.tianyancha.com/ll_csfneebgvw.html)
