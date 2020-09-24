@@ -11,5 +11,5 @@ after_success:
   - docker build . -t "zyunv513/docker-learn:latest"
   - docker push zyunv513/docker-learn:latest
   - chmod 600 id_rsa
-  - ssh -o "StrictHostKeyChecking no" -i id_rsa root@$server_ip "cd /opt/project;sudo docker-compose -f docker-compose.yml pull;sudo docker-compose -f docker-compose.yml
+  - sshpass -p $server_pwd ssh -o "StrictHostKeyChecking no" -i id_rsa root@$server_ip "cd /opt/project;sudo docker-compose -f docker-compose.yml pull;sudo docker-compose -f docker-compose.yml
     up -d;exit"
