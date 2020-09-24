@@ -4,8 +4,8 @@ services:
 sudo: required
 before_install:
   - export TZ='Asia/Shanghai'
-script:
-  - docker --version
+scripts:
+  - echo "build"
 after_success:
   - echo $docker_pwd | docker login -u "zyunv513" --password-stdin
   - docker build . -t "zyunv513/docker-learn:latest"
