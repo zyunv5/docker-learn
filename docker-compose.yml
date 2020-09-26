@@ -57,6 +57,7 @@ services:
       - "3307:3306"
     networks:
       - backend
+    privileged: true
     command:
       [
         "--character-set-server=utf8mb4",

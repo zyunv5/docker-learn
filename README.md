@@ -151,6 +151,38 @@ openjdk version "1.8.0_262"
 安装包搞起！！！
 ### 缺少nodejs环境
 系统管理 ---> 全局工具配置 ---> NodeJS ---> 安装 ---> 自动安装 ---> 选择版本 ---> Save
+### docker-compose not found
+[Jenkins服务使用 宿主机的docker、docker-compose ](https://www.cnblogs.com/zhongyuanzhao000/p/11681474.html)
+which docker-compose
+sudo /usr/local/bin/docker-compose  xxx
+### sudo: no tty present and no askpass program specified
+[Jenkins服务使用 宿主机的docker、docker-compose ](https://www.cnblogs.com/zhongyuanzhao000/p/11681474.html)
+首先，将   Defaults    requiretty  这一行用#注释掉；
+ALL=(ALL) NOPASSWD: ALL
+接着，通过 wq! 来强制保存并退出；
+最后，需要重启Jenkins，执行命令：/etc/init.d/jenkins restart
+### for docker-react  UnixHTTPConnectionPool(host='localhost', port=None): Read timed out.
+第一种方法：重启服务器上的docker
+sudo systemctl restart docker.service
+
+第二种方法：
+vim /etc/profile
+
+export DOCKER_CLIENT_TIMEOUT=120
+export COMPOSE_HTTP_TIMEOUT=120
+
+### 上面docker构建失败之后,unable to unlink old 'mysql/data/auto.cnf' (Permission denied) 挂载的目录没有权限
+挂载目录缺少权限
+命令行启动的话 加入 --privileged=true
+docker-compose中加入    privileged: true
+
+### jenkins开启邮件通知
+管理插件->Email Extension Plugin->系统设置
+Jenkins Location 配置邮箱
+Extended E-mail Notification
+
 
 感谢：
 [docker + Jenkins前端自动化部署完整实践](https://blog.csdn.net/weixin_43983850/article/details/107055722)
+
+
