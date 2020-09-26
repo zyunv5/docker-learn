@@ -10,6 +10,7 @@ services:
     networks:
       - frontend
       - backend
+    privileged: true
     deploy:
       restart_policy:
         condition: on-failure
@@ -40,6 +41,8 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: root
       ME_CONFIG_BASICAUTH_PASSWORD: 123456
       DATABASE_HOST: mysqlDB
+    privileged: true
+    
 
   mysqlDB:
     image: mysql:5.7.31
