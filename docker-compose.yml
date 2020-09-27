@@ -16,7 +16,6 @@ services:
         condition: on-failure
     depends_on:
       - nodejs
-      - mysqlDB
 
   nodejs:
     build:
@@ -30,10 +29,6 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-    depends_on:
-      - mysqlDB
-    links:
-      - mysqlDB
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
@@ -42,33 +37,6 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: 123456
       DATABASE_HOST: mysqlDB
     privileged: true
-
-  mysqlDB:
-    image: mysql:5.7.31
-    container_name: docker-mysql
-    deploy:
-      restart_policy:
-        condition: on-failure
-    environment:
-      MYSQL_ROOT_PASSWORD: 123456
-      MYSQL_DATABASE: "test"
-      MYSQL_USER: root #创建test用户
-      MYSQL_PASSWORD: 123456 #设置test用户的密码
-      TZ: Asia/Shanghai # 设置时区
-    ports:
-      - "3307:3306"
-    networks:
-      - backend
-    privileged: true
-    command:
-      [
-        "--character-set-server=utf8mb4",
-        "--collation-server=utf8mb4_unicode_ci",
-      ]
-    volumes:
-      # - ./mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
-      - "./mysql/data:/var/lib/mysql"
-      - ./mysql/init:/docker-entrypoint-initdb.d/
 
 networks:
   frontend:
