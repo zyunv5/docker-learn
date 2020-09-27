@@ -1,0 +1,27 @@
+version: "3"
+services:
+  gogs:
+    image: gogs/gogs
+    container_name: docker-gogs
+    ports:
+      - "10022:22"
+      - "13000:3000"
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      - /var/gogs:/data
+    restart: always
+    external_links:
+      - mysqlDB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - backend
+
+networks:
+  backend:
+    external:
+      name: nginx-mysql_backend
