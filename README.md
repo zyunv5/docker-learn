@@ -9,7 +9,11 @@
 9. project-deploy-gitlab 失败了，gitlab需要内存至少2G以上，太强了，小水管顶不住
 10. project-deploy-gogs 算是gitlab的替代品，界面和gitlab差不多，小巧方便，使用docker构建后，直接注册登录就可以
 
-感谢以下文章：
+
+ docker-example php环境的案例 查看compose->docker-compose.yml
+ docker-example2 构建一个jenkins环境
+
+感谢以下文章：    
 [jenkins+docker 实现自动编译、打包、构建镜像、容器部署](https://blog.csdn.net/xiaoxiangzi520/article/details/88842200)    
 [jenkins+docker 的简单项目部署](https://www.pianshen.com/article/3247382361/)    
 [用gogs搭建属于自己的git网站](https://www.jianshu.com/p/86c385682ac8)    
